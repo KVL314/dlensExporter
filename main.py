@@ -200,7 +200,6 @@ class Ui_MainWindow(object):
         self.apkc = apkconn.cursor()
 
     def connectdlensdatabase(self):
-        print (self.dlens)
         dlensconn = sqlite3.connect(self.dlens)
         self.dlensc = dlensconn.cursor()
 
@@ -266,8 +265,6 @@ class Ui_MainWindow(object):
         lists = {}
 
         for iteration, each  in enumerate(listsToImport):
-            print(each[0])
-            print(listsToImport[iteration])
             #TODO DEREK make file name always valild. `/` and ` ` should be replaced with `-`
             invalid = '<>:"/\|?* '
             collectionName = each[3]
@@ -280,9 +277,6 @@ class Ui_MainWindow(object):
                 'file': '%s/%s-%s.%s' % (collectionDir, listTypes[each[2]], collectionName, fileType),
                 'groupFile': '%s/%ss.%s' % (collectionDir, listTypes[each[2]], fileType),
             }
-            print("here")
-            print(lists[each[0]])
-            print(lists[each[0]]['file'])
             with open(lists[each[0]]['file'], "w+", encoding="utf-8") as file:
                 file.write(topLine)
             with open(lists[each[0]]['groupFile'], "w+", encoding="utf-8") as file:
@@ -316,7 +310,6 @@ class Ui_MainWindow(object):
             language = each[10]
 
             if list < 0:
-                print("idk why < 0")
                 continue
 
             self.progressBar.setValue((iteration + 1) / total * 100)
@@ -364,9 +357,6 @@ class Ui_MainWindow(object):
                 condition = "Good (Lightly Played)"
 
             writeData = f'''"{quantity}","{quantity}","{name}","{set}","{number}","{condition}","{language}","{foil}","","","","","","",""\n'''
-            print(list)
-            print(lists[list]['file'])
-            print(lists[list]['groupFile'])
             with open(lists[list]['file'], "a", encoding="utf-8") as file:
                 file.write(writeData)
             with open(lists[list]['groupFile'], "a", encoding="utf-8") as file:
