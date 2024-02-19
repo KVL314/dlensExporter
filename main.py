@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# Copyright KVL314 [Derek Stiles](https://github.com/KVL314)
 # data.db file from Delver Lens N extracted apk.
 import os
 import sys
