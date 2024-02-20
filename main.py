@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Copyright KVL314 [Derek Stiles](https://github.com/KVL314)
+# Copyright [c] KVL314 [Derek Stiles](https://github.com/KVL314)
 # data.db file from Delver Lens N extracted apk.
 import os
 import sys
@@ -18,6 +18,7 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2 import QtWidgets
 
+configFile = 'settings.yaml'
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -421,7 +422,7 @@ def getScryfallJson():
 
 
 def getDlensBackup():
-    with open('dropbox.link', 'r') as file:
+    with open(configFile, 'r') as file:
         url = file.read().rstrip()
         data = file.read().replace('\n', '')
         fileName = f'user-{time.strftime("%Y%m%d")}.dlens'

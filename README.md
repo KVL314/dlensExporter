@@ -3,7 +3,8 @@ Python3 PySide2
 
 # Ubuntu install
 ```bash
-sudo apt-get -y install python3-pyside2.qtwidget
+sudo apt-get -y install python3-pyside2.qtwidget chromium-browser python3-selenium
+sudo python3 -m pip install webdrivermanager --break-system-pack
 ```
 
 # dlensExporter
