@@ -18,7 +18,8 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2 import QtWidgets
 
-configFile = 'settings.yaml'
+import config
+from moxfieldAPI import moxAPI
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -422,13 +423,9 @@ def getScryfallJson():
 
 
 def getDlensBackup():
-    with open(configFile, 'r') as file:
-        url = file.read().rstrip()
-        data = file.read().replace('\n', '')
-        fileName = f'user-{time.strftime("%Y%m%d")}.dlens'
-        with requests.get(url, stream=True) as r:
-            open(fileName, 'wb').write(r.content)
-            return fileName
+    with requests.get(config.get_collection_url(), stream=True) as r:
+        open(fileName, 'wb').write(r.content)
+        return fileName
     return ''
 
 
