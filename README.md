@@ -21,7 +21,7 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 
 ### Windows install
 ```bash
-pip install pyyaml requests pySide2 selenium
+pip install pyyaml requests pySide2 selenium webdriver_manager
 ```
 
 # dlensExporter
