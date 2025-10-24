@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.common import exceptions
 
-from webdriver_manager.chrome import ChromeDriverManager
+#from webdriver_manager.chrome import ChromeDriverManager
 
 import config
 BASE_URL = 'https://www.moxfield.com'
@@ -25,20 +25,26 @@ class moxAPI():
         #options.add_argument('--headless')
         #options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
-        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        #self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+        service = Service('/usr/bin/chromedriver')  # Path to system chromedriver
+        self.driver = webdriver.Chrome(service=service, options=options)
 
     def __call__(self):
         self.driver.close()
 
     def login(self):
-        self.driver.get(LOGIN_URL)
+        self.driver.get(BASE_URL)
+        '''
+        #self.driver.get(LOGIN_URL)
         creds = config.get_moxfield_creds()
         print(self.driver.title)
         self.driver.find_element(By.ID, 'username').send_keys(creds['username'])
         self.driver.find_element(By.ID, 'password').send_keys(creds['password'])
         self.driver.find_element(By.CLASS_NAME, 'btn-primary').click()
+        '''
         self.driver.implicitly_wait(0.5)
-        sleep(1)
+        sleep(30)  # Wait for user to login manually
 
     def get_decks(self):
         self.driver.get(DECK_URL)
@@ -56,8 +62,11 @@ class moxAPI():
 
         print(self.decks)
 
+
+'''
 mox = moxAPI()
 mox.login()
 mox.get_decks()
 print('waiting ...')
 sleep(100)
+'''

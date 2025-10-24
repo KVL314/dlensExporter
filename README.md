@@ -13,7 +13,7 @@ Python3 PySide2 requests selenium webdriver
 
 ### Ubuntu install
 ```bash
-sudo apt-get -y install python3-pyside2.qtwidget chromium-browser python3-selenium pip
+sudo apt-get -y install python3-pyside2.qtwidget chromium-browser chromium-chromedriver python3-selenium pip
 sudo python3 -m pip install webdrivermanager --break-system-pack
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb

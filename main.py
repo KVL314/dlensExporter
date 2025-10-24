@@ -6,6 +6,7 @@ import sys
 import json
 import time
 import queue
+import shutil
 import sqlite3
 import asyncio
 import zipfile
@@ -20,6 +21,16 @@ from PySide2 import QtWidgets
 
 import config
 from moxfieldAPI import moxAPI
+
+
+def main():
+    app = QtWidgets.QApplication(sys.argv)
+    ex = Ui_MainWindow()
+    w = QtWidgets.QMainWindow()
+    ex.setupUi(w)
+    w.show()
+    sys.exit(app.exec_())
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -269,10 +280,14 @@ class Ui_MainWindow(object):
 
         for iteration, each  in enumerate(listsToImport):
             #TODO DEREK make file name always valild. `/` and ` ` should be replaced with `-`
-            invalid = '<>:"/\|?* '
+            invalid = r'<>:"/\|?* '
             collectionName = each[3]
             for char in invalid:
                 collectionName = collectionName.replace(char, '-')
+
+            if each[2] not in listTypes:
+                print("Unknown list type:", each[2])
+                continue  # or handle the error as needed
 
             lists[each[0]] = {
                 'listType': each[2],
@@ -359,7 +374,14 @@ class Ui_MainWindow(object):
             elif condition == "Slighty Played":
                 condition = "Good (Lightly Played)"
 
-            writeData = f'''"{quantity}","{quantity}","{name}","{set}","{number}","{condition}","{language}","{foil}","","","","","","",""\n'''
+            writeData = f'"{quantity}","{quantity}","{name}","{set}","{number}","{condition}","{language}","{foil}","","","","","","",""\n'
+
+            if list not in lists:
+                print("Unknown list type:", list)
+                continue  # Skip cards with invalid list type
+
+            print(lists[list])
+            print(lists[list]['file'])
             with open(lists[list]['file'], "a", encoding="utf-8") as file:
                 file.write(writeData)
             with open(lists[list]['groupFile'], "a", encoding="utf-8") as file:
@@ -393,7 +415,7 @@ def getApkDatabase():
             open(fullPath, 'wb').write(r.content)
         with zipfile.ZipFile(fullPath, 'r') as zip_ref:
             zip_ref.extractall(tmpDir)
-            os.rename(f'{tmpDir}/res/Cc.db', f'{cwd}/Cc.db')
+            shutil.move(f'{tmpDir}/res/Cc.db', f'{cwd}/Cc.db')
             return 'Cc.db'
 
     return ''
@@ -423,16 +445,22 @@ def getScryfallJson():
 
 
 def getDlensBackup():
-    with requests.get(config.get_collection_url(), stream=True) as r:
-        open(fileName, 'wb').write(r.content)
-        return fileName
-    return ''
+    print("Fetching latest dlens backup...")
+    url = config.get_collection_url()
+    fileName = 'user.v2.dlens'
+    # Dropbox shareable URLs need ?dl=1 to force direct download
+    if "dropbox.com" in url and "&dl=1" not in url:
+        if "&dl=0" in url:
+            url = url.replace("&dl=0", "&dl=1")
+        else:
+            url += "&dl=1"
+
+    print("Downloading dlens backup from:", url)
+    with requests.get(url, stream=True) as r:
+        with open(fileName, 'wb') as f:
+            f.write(r.content)
+    return fileName
 
 
 if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
-    ex = Ui_MainWindow()
-    w = QtWidgets.QMainWindow()
-    ex.setupUi(w)
-    w.show()
-    sys.exit(app.exec_())
+    main()
